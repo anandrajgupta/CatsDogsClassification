@@ -130,3 +130,12 @@ feedImage = new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)  # return the image wit
 
 prediction = model.predict([feedImage/255.0])  # /255.0 nahi karne pe error aa rha maybe becos upper X=X/255.0 kiya hai
 print (prediction)
+
+
+#Error Recieved 
+ValueError: Python inputs incompatible with input_signature:
+  inputs: (
+    Tensor("IteratorGetNext:0", shape=(None, 50, 50, 1), dtype=uint8))
+  input_signature: (
+    TensorSpec(shape=(None, None, None, 1), dtype=tf.float32, name=None))
+
