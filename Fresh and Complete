@@ -1,3 +1,5 @@
+#Let's load the Dataset
+
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -8,11 +10,11 @@ DATADIR = "C:/Users/anand.g1/Desktop/[Fresh 1] TestVisionCode/Dataset"
 
 CATEGORIES = ["Dog", "Cat"]
 
-IMG_SIZE = 50
+IMG_SIZE = 70
 training_data = [] #List Data Type
 
 def create_training_data():
-    for category in CATEGORIES:  #Dogs and Cats
+    for category in CATEGORIES:  #Dogs and Cats 
 
         path = os.path.join(DATADIR,category)   #create path to dogs and cats
         class_num = CATEGORIES.index(category)  #which Class: 0=dog 1=cat
@@ -39,16 +41,19 @@ for features,label in training_data:
     y.append(label)
 
 X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+y = np.asarray(y)
 
 import pickle
 
-pickle_out = open("X.pickle","ab")
+pickle_out = open("X.pickle",'wb')
 pickle.dump(X, pickle_out)
 pickle_out.close()
 
-pickle_out_oneMore = open("y.pickle","ab")
+pickle_out_oneMore = open("y.pickle",'wb')
 pickle.dump(y, pickle_out_oneMore)
 pickle_out_oneMore.close()
+
+# Let's make our Convolution Network and Train the Model
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
@@ -56,20 +61,16 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.keras.callbacks import TensorBoard
 import pickle
 import time
+import numpy as np
 
-pickle_in = open("X.pickle","rb")
-X = pickle.load(pickle_in)
+X = (pickle.load(open("X.pickle", "rb"))) 
+y = (pickle.load(open("y.pickle", "rb")))
 
-pickle_in = open("y.pickle","rb")
-y = pickle.load(pickle_in)
-
-X = X/255.0 #Normalize karne ke lie
+X = X/255.0
 
 dense_layers = [0]
 layer_sizes = [64]
 conv_layers = [3]
-
-y = np.array(y)
 
 for dense_layer in dense_layers:
     for layer_size in layer_sizes:
@@ -112,30 +113,24 @@ for dense_layer in dense_layers:
 
 model.save('64x3-CNN.model')
 
+# Let's test our model now :)
+
 import cv2
 import tensorflow as tf
-import numpy as np
 
 CATEGORIES = ["Dog", "Cat"]  # will use this to convert prediction num to string value
 
-filepath = "dogValidate.jpg"
+def prepare(filepath):
+    IMG_SIZE = 70
+    img_array = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)  # read in the image, convert to grayscale
+    new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # resize image to match model's expected sizing
+    new_array = new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)  # return the image with shaping that TF wants.
+    return new_array/1 #Anyhow - Somehow: Divding it by a number is causing the data type to modify and suit the argument that is required in "model.predict"
 
-model = tf.keras.models.load_model("64x3-CNN.model")
+model = tf.keras.models.load_model('64x3-CNN.model')
 
-IMG_SIZE = 50
-img_array = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)  # read in the image, convert to grayscale
-new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # resize image to match model's expected sizing
-feedImage = new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)  # return the image with shaping that TF wants.
+prediction = model.predict([prepare(r'C:\Users\anand.g1\Desktop\[Fresh 1] TestVisionCode\Dataset\Testing\catNet2.jpg')])
+print(prediction)
+print(CATEGORIES[int(prediction[0][0])])
 
-
-prediction = model.predict([feedImage/255.0])  # /255.0 nahi karne pe error aa rha maybe becos upper X=X/255.0 kiya hai
-print (prediction)
-
-
-#Error Recieved 
-ValueError: Python inputs incompatible with input_signature:
-  inputs: (
-    Tensor("IteratorGetNext:0", shape=(None, 50, 50, 1), dtype=uint8))
-  input_signature: (
-    TensorSpec(shape=(None, None, None, 1), dtype=tf.float32, name=None))
 
