@@ -1,4 +1,4 @@
-#################################### Buggy Code Starts ########################################
+#################################### Buggy Code Starts ##################################
 import cv2
 import tensorflow as tf
 
@@ -15,11 +15,11 @@ model = tf.keras.models.load_model('64x3-CNN.model')
 prediction = model.predict([prepare(r'C:\Users\anand.g1\Desktop\[Fresh 1] TestVisionCode\Dataset\Testing\catNet2.jpg')])
 print(prediction)
 print(CATEGORIES[int(prediction[0][0])])
-#################################### Buggy Code Ends ########################################
+#################################### Buggy Code Ends ###################################
 
 
 
-#################################### Error Starts ########################################
+#################################### Error Starts ######################################
 > ValueError: Python inputs incompatible with input_signature:
   inputs: (
     Tensor("IteratorGetNext:0", shape=(None, 100, 100, 1), dtype=uint8))
@@ -30,7 +30,7 @@ print(CATEGORIES[int(prediction[0][0])])
 
 
     
-#################################### Correct Code Starts ########################################
+#################################### Correct Code Starts ################################
 import cv2
 import tensorflow as tf
 
@@ -47,6 +47,6 @@ model = tf.keras.models.load_model('64x3-CNN.model')
 prediction = model.predict([prepare(r'C:\Users\anand.g1\Desktop\[Fresh 1] TestVisionCode\Dataset\Testing\catNet2.jpg')])
 print(prediction)
 print(CATEGORIES[int(prediction[0][0])])
-#################################### Correct Code Ends ########################################
+#################################### Correct Code Ends ####################################
 
 
