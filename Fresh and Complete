@@ -134,3 +134,4 @@ print(prediction)
 print(CATEGORIES[int(prediction[0][0])])
 
 
+
