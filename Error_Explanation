@@ -1,0 +1,52 @@
+#################################### Buggy Code Starts ########################################
+import cv2
+import tensorflow as tf
+
+CATEGORIES = ["Dog", "Cat"]
+
+def prepare(filepath):
+    IMG_SIZE = 70
+    img_array = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE) 
+    new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  
+    new_array = new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)  
+    return new_array
+model = tf.keras.models.load_model('64x3-CNN.model')
+
+prediction = model.predict([prepare(r'C:\Users\anand.g1\Desktop\[Fresh 1] TestVisionCode\Dataset\Testing\catNet2.jpg')])
+print(prediction)
+print(CATEGORIES[int(prediction[0][0])])
+#################################### Buggy Code Ends ########################################
+
+
+
+#################################### Error Starts ########################################
+> ValueError: Python inputs incompatible with input_signature:
+  inputs: (
+    Tensor("IteratorGetNext:0", shape=(None, 100, 100, 1), dtype=uint8))
+  input_signature: (
+    TensorSpec(shape=(None, None, None, 1), dtype=tf.float32, name=None))
+#################################### Error Ends ########################################
+
+
+
+    
+#################################### Correct Code Starts ########################################
+import cv2
+import tensorflow as tf
+
+CATEGORIES = ["Dog", "Cat"]
+
+def prepare(filepath):
+    IMG_SIZE = 70
+    img_array = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE) 
+    new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  
+    new_array = new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)  
+    return new_array/1 #Divided by 1 karne se aesa kya ho ja rha ki Error Remove hogaya ?????????
+model = tf.keras.models.load_model('64x3-CNN.model')
+
+prediction = model.predict([prepare(r'C:\Users\anand.g1\Desktop\[Fresh 1] TestVisionCode\Dataset\Testing\catNet2.jpg')])
+print(prediction)
+print(CATEGORIES[int(prediction[0][0])])
+#################################### Correct Code Ends ########################################
+
+
